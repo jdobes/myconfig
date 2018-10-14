@@ -1,0 +1,23 @@
+---
+- hosts: all
+  vars:
+  tasks:
+    - name: Remove packages
+      dnf:
+        name:
+          - PackageKit-glib
+        state: absent
+      become: yes
+    - name: Install packages
+      dnf:
+        name:
+          - firefox
+          - google-chrome-stable
+          - vlc
+          - terminator
+          - vim
+          - virt-manager
+          - gimp
+          - inkscape
+        state: present
+      become: yes
