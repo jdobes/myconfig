@@ -54,6 +54,8 @@
           - wireshark-gtk
           - libselinux-python
           - f28-backgrounds-extras-gnome
+          - docker
+          - docker-compose
         state: present
       become: yes
     - name: Enable and start sshd
