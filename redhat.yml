@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars_files:
+    - config/redhat.yml
+  tasks:
+    - name: Install packages
+      dnf:
+        name:
+          - "{{ config_rpm_url }}"
+        state: present
+      become: yes
