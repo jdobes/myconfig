@@ -2,6 +2,32 @@
 - hosts: all
   vars:
   tasks:
+    - name: Get Fedora version
+      shell: rpm -E %fedora
+      args:
+        warn: false
+      changed_when: false
+      register: fedora_version
+    - name: Add RPM Fusion repo
+      dnf:
+        name:
+          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm
+          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version.stdout }}.noarch.rpm
+        state: present
+      become: yes
+    - name: Add google-chrome repo
+      yum_repository:
+        name: google-chrome
+        description: google-chrome repo
+        baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
+        gpgcheck: yes
+        gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+      become: yes
+    - name: Upgrade all packages
+      dnf:
+        name: "*"
+        state: latest
+      become: yes
     - name: Remove packages
       dnf:
         name:
@@ -19,5 +45,19 @@
           - virt-manager
           - gimp
           - inkscape
+          - gnome-tweaks
+          - gitk
         state: present
       become: yes
+    - name: Set Git name
+      git_config:
+        name: user.name
+        value: Jan Dobes
+        scope: global
+    - name: Set Git email
+      git_config:
+        name: user.email
+        value: git@owny.cz
+        scope: global
+
+
