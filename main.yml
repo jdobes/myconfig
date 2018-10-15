@@ -53,6 +53,7 @@
           - wine
           - wireshark-gtk
           - libselinux-python
+          - f28-backgrounds-extras-gnome
         state: present
       become: yes
     - name: Enable and start sshd
