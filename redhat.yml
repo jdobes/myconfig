@@ -3,7 +3,16 @@
   vars_files:
     - config/redhat.yml
   tasks:
-    - name: Install packages
+    - name: Install openvpn packages
+      dnf:
+        name:
+          - NetworkManager-openvpn
+          - NetworkManager-openvpn-gnome
+          - "{{ redhat_internal_cert }}"
+          - "{{ redhat_internal_openvpn_profiles }}"
+        state: present
+      become: yes
+    - name: Install kerberos packages
       dnf:
         name:
           - "{{ config_rpm_url }}"
