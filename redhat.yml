@@ -37,3 +37,7 @@
         src: config/google-chrome-kerberos.json
         dest: /etc/opt/chrome/policies/managed/redhat.json
       become: yes
+    - name: Set hexchat server list
+      copy:
+        src: config/hexchat-servlist.conf
+        dest: ~/.config/hexchat/servlist.conf
