@@ -9,3 +9,22 @@
           - "{{ config_rpm_url }}"
         state: present
       become: yes
+    - name: Get Firefox config path
+      shell: find ~/.mozilla/firefox/ -type d -name '*.default'
+      register: firefox_config_path
+      changed_when: false
+    - name: Set Firefox kerberos settings
+      copy:
+        src: config/firefox-kerberos.js
+        dest: "{{ firefox_config_path.stdout }}/user.js"
+      when: firefox_config_path.stdout != ""
+    - name: Ensure /etc/opt/chrome/policies/managed dir exists
+      file:
+        path: /etc/opt/chrome/policies/managed
+        state: directory
+      become: yes
+    - name: Set Chrome kerberos settings
+      copy:
+        src: config/google-chrome-kerberos.json
+        dest: /etc/opt/chrome/policies/managed/redhat.json
+      become: yes
