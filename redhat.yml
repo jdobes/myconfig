@@ -41,3 +41,21 @@
       copy:
         src: config/hexchat-servlist.conf
         dest: ~/.config/hexchat/servlist.conf
+    - name: Configure printers 1/3
+      lineinfile:
+        path: /etc/cups/cups-browsed.conf
+        regexp: ^BrowsePoll
+        line: BrowsePoll {{ cups_server }}
+      become: yes
+    - name: Configure printers 2/3
+      lineinfile:
+        path: /etc/cups/cups-browsed.conf
+        regexp: ^LocalQueueNamingRemoteCUPS
+        line: LocalQueueNamingRemoteCUPS RemoteName
+      become: yes
+    - name: Configure printers 3/3
+      systemd:
+        name: cups-browsed
+        state: restarted
+        enabled: yes
+      become: yes
