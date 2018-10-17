@@ -1,6 +1,23 @@
 ---
 - hosts: all
   vars:
+    gnome_extensions:
+      - name: "alternate-tab@gnome-shell-extensions.gcampax.github.com"
+        url: ""
+      - name: "places-menu@gnome-shell-extensions.gcampax.github.com"
+        url: ""
+      - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        url: ""
+      - name: "apps-menu@gnome-shell-extensions.gcampax.github.com"
+        url: ""
+      - name: "nohotcorner@azuri.free.fr"
+        url: "https://extensions.gnome.org/extension-data/nohotcorner@azuri.free.fr.v18.shell-extension.zip"
+      - name: "Move_Clock@rmy.pobox.com"
+        url: "https://extensions.gnome.org/extension-data/Move_Clock@rmy.pobox.com.v18.shell-extension.zip"
+      - name: "dash-to-dock@micxgx.gmail.com"
+        url: "https://extensions.gnome.org/extension-data/dash-to-dock@micxgx.gmail.com.v64.shell-extension.zip"
+      - name: "pixel-saver@deadalnix.me"
+        url: "https://extensions.gnome.org/extension-data/pixel-saver@deadalnix.me.v15.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -59,6 +76,48 @@
         state: started
         enabled: yes
       become: yes
+    - name: Setup keyboard layouts
+      dconf:
+        key: "/org/gnome/desktop/input-sources/sources"
+        value: "[('xkb', 'cz'), ('xkb', 'us')]"
+        state: present
+    - name: Show battery percentage
+      dconf:
+        key: "/org/gnome/desktop/interface/show-battery-percentage"
+        value: "true"
+        state: present
+      when: false # not displayed correctly, disable for now
+    - name: Set clock format
+      dconf:
+        key: "/org/gnome/desktop/interface/clock-format"
+        value: "'12h'"
+        state: present
+    - name: Create local extensions directory
+      file:
+        path: ~/.local/share/gnome-shell/extensions
+        state: directory
+    - name: Create extensions subdirs
+      file:
+        path: "~/.local/share/gnome-shell/extensions/{{ item.name }}"
+        state: directory
+      with_items:
+        - "{{ gnome_extensions }}"
+      when: item.url != ""
+    - name: Download extensions
+      unarchive:
+        src: "{{ item.url }}"
+        dest: "~/.local/share/gnome-shell/extensions/{{ item.name }}"
+        remote_src: yes
+      with_items:
+        - "{{ gnome_extensions }}"
+      when: item.url != ""
+    - name: Enable extensions
+      dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        value: "{{ a }}"
+        state: present
+      vars:
+        a: "{{ gnome_extensions | map(attribute='name') | list }}"
     - name: Set bash line format
       lineinfile:
         path: ~/.bashrc
