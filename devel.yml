@@ -2,6 +2,14 @@
 - hosts: all
   vars:
   tasks:
+    - name: Add Slack repo
+      yum_repository:
+        name: slack
+        description: slack repo
+        baseurl: https://packagecloud.io/slacktechnologies/slack/fedora/21/$basearch
+        gpgcheck: yes
+        gpgkey: https://slack.com/gpg/slack_pubkey.gpg
+      become: yes
     - name: Install packages
       dnf:
         name:
@@ -11,6 +19,7 @@
           - docker
           - docker-compose
           - origin-clients
+          - slack
         state: present
       become: yes
     - name: Enable and start docker
