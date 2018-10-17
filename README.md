@@ -1,18 +1,18 @@
 # myconfig
-My configuration
+Configure my Fedora 28 workstation.
 
-Install ansible:
+- Install ansible:
 
-    ./init.sh
+      sudo dnf -y install ansible
 
-Apply base config:
+- Apply base config:
 
-    ansible-playbook base.yml
+      ansible-playbook base.yml
 
-Apply devel config (if needed):
+- Apply devel config (if needed):
 
-    ansible-playbook devel.yml
+      ansible-playbook devel.yml
 
-Apply redhat config (if needed):
+- Apply redhat config (if needed):
 
-    ansible-playbook redhat.yml
+      ansible-playbook redhat.yml
