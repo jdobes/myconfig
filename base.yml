@@ -81,6 +81,11 @@
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'cz'), ('xkb', 'us')]"
         state: present
+    - name: Disable auto screen lock
+      dconf:
+        key: "/org/gnome/desktop/screensaver/lock-enabled"
+        value: "false"
+        state: present
     - name: Show battery percentage
       dconf:
         key: "/org/gnome/desktop/interface/show-battery-percentage"
