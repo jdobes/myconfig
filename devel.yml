@@ -48,6 +48,12 @@
         dest: /usr/local/bin/docker-machine-driver-kvm
         mode: 0755
       become: yes
+    - name: Install minishift
+      unarchive:
+        src: https://github.com/minishift/minishift/releases/download/v1.26.1/minishift-1.26.1-linux-amd64.tgz
+        dest: /opt
+        remote_src: yes
+      become: yes
     - name: Set Git name
       git_config:
         name: user.name
