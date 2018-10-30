@@ -78,6 +78,17 @@
         state: started
         enabled: yes
       become: yes
+    - name: Ensure group libvirt exists
+      group:
+        name: libvirt
+        state: present
+      become: yes
+    - name: Add {{ lookup('env','USER') }} to libvirt group
+      user:
+        name: "{{ lookup('env','USER') }}"
+        groups: libvirt
+        append: yes
+      become: yes
     - name: Setup keyboard layouts
       dconf:
         key: "/org/gnome/desktop/input-sources/sources"
