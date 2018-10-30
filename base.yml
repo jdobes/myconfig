@@ -60,6 +60,8 @@
           - terminator
           - vim
           - virt-manager
+          - libvirt
+          - qemu-kvm
           - gimp
           - inkscape
           - gnome-tweaks
