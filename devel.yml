@@ -13,6 +13,14 @@
         gpgcheck: yes
         gpgkey: https://slack.com/gpg/slack_pubkey.gpg
       become: yes
+    - name: Add VS Code repo
+      yum_repository:
+        name: vscode
+        description: vscode repo
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+      become: yes
     - name: Install packages
       dnf:
         name:
@@ -23,6 +31,7 @@
           - docker-compose
           - origin-clients
           - slack
+          - code
         state: present
       become: yes
     - name: Ensure group docker exists
