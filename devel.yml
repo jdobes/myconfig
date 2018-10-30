@@ -42,6 +42,12 @@
         state: started
         enabled: yes
       become: yes
+    - name: Install docker-machine-driver-kvm # For minishift
+      get_url:
+        url: https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm
+        dest: /usr/local/bin/docker-machine-driver-kvm
+        mode: 0755
+      become: yes
     - name: Set Git name
       git_config:
         name: user.name
