@@ -26,7 +26,7 @@
         name:
           - gitk
           - hexchat
-          - wireshark-gtk
+          - wireshark
           - docker
           - docker-compose
           - origin-clients

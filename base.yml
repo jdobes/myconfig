@@ -69,7 +69,7 @@
           - gparted
           - wine
           - libselinux-python
-          - f28-backgrounds-extras-gnome
+          - f29-backgrounds-extras-gnome
         state: present
       become: yes
     - name: Enable and start sshd
