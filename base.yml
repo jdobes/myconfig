@@ -16,8 +16,8 @@
         url: "https://extensions.gnome.org/extension-data/Move_Clock@rmy.pobox.com.v18.shell-extension.zip"
       - name: "dash-to-dock@micxgx.gmail.com"
         url: "https://extensions.gnome.org/extension-data/dash-to-dock@micxgx.gmail.com.v64.shell-extension.zip"
-      - name: "pixel-saver@deadalnix.me"
-        url: "https://extensions.gnome.org/extension-data/pixel-saver@deadalnix.me.v15.shell-extension.zip"
+      - name: "no-title-bar@franglais125.gmail.com"
+        url: "https://extensions.gnome.org/extension-data/no-title-bar@franglais125.gmail.com.v9.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
