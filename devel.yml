@@ -83,3 +83,4 @@
         - "{{ pycharm_url }}"
         - "{{ idea_url }}"
         - "{{ android_studio_url }}"
+      when: false # Don't install IDEs now
