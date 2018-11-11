@@ -70,6 +70,7 @@
           - wine
           - libselinux-python
           - f29-backgrounds-extras-gnome
+          - python3-psutil
         state: present
       become: yes
     - name: Enable and start sshd
