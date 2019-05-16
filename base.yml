@@ -14,8 +14,8 @@
         url: "https://extensions.gnome.org/extension-data/Move_Clock@rmy.pobox.com.v18.shell-extension.zip"
       - name: "dash-to-dock@micxgx.gmail.com"
         url: "https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v66.shell-extension.zip"
-      - name: "gtktitlebar@velitasali.github.io"
-        url: "https://extensions.gnome.org/extension-data/gtktitlebarvelitasali.github.io.v2.shell-extension.zip"
+      - name: "unite@hardpixel.eu"
+        url: "https://extensions.gnome.org/extension-data/unitehardpixel.eu.v30.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -68,6 +68,7 @@
           - libselinux-python
           - f30-backgrounds-extras-gnome
           - python3-psutil
+          - xorg-x11-utils
         state: present
       become: yes
     - name: Enable and start sshd
