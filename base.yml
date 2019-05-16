@@ -15,9 +15,9 @@
       - name: "Move_Clock@rmy.pobox.com"
         url: "https://extensions.gnome.org/extension-data/Move_Clock@rmy.pobox.com.v18.shell-extension.zip"
       - name: "dash-to-dock@micxgx.gmail.com"
-        url: "https://extensions.gnome.org/extension-data/dash-to-dock@micxgx.gmail.com.v64.shell-extension.zip"
-      - name: "no-title-bar@franglais125.gmail.com"
-        url: "https://extensions.gnome.org/extension-data/no-title-bar@franglais125.gmail.com.v9.shell-extension.zip"
+        url: "https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v66.shell-extension.zip"
+      - name: "gtktitlebar@velitasali.github.io"
+        url: "https://extensions.gnome.org/extension-data/gtktitlebarvelitasali.github.io.v2.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -65,7 +65,6 @@
           - gimp
           - inkscape
           - gnome-tweaks
-          - azureus
           - gparted
           - wine
           - libselinux-python
