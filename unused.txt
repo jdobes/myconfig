@@ -1,0 +1,30 @@
+- name: Install packages
+      dnf:
+        name:
+          - sssd
+          - krb5-workstation
+          - pam_krb5
+          - openldap-clients
+          - authconfig
+        state: present
+      become: yes
+    - name: Run authconfig
+      shell: |
+        authconfig {{ authconfig_args }}
+      become: yes
+    - name: Create /etc/openldap/cacerts dir
+      file:
+        path: /etc/openldap/cacerts
+        state: directory
+      become: yes
+    - name: Download CA certs
+      get_url:
+        url: "{{ item[0] }}"
+        dest: "{{ item[1] }}"
+      with_nested:
+        - "{{ ca_certs }}"
+        - [ /etc/pki/ca-trust/source/anchors, /etc/openldap/cacerts ]
+      become: yes
+    - name: Run update-ca-trust
+      shell: update-ca-trust extract
+      become: yes
