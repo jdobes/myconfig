@@ -2,8 +2,6 @@
 - hosts: all
   vars:
     gnome_extensions:
-      - name: "alternate-tab@gnome-shell-extensions.gcampax.github.com"
-        url: ""
       - name: "places-menu@gnome-shell-extensions.gcampax.github.com"
         url: ""
       - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
