@@ -102,6 +102,16 @@
         key: "/org/gnome/desktop/interface/clock-format"
         value: "'12h'"
         state: present
+    - name: Set alt-tab
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+        value: "['<Alt>Tab']"
+        state: present
+    - name: Set alt-tab backward
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
+        value: "['<Shift><Alt>Tab']"
+        state: present
     - name: Create local extensions directory
       file:
         path: ~/.local/share/gnome-shell/extensions
