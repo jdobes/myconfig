@@ -1,9 +1,5 @@
 ---
 - hosts: all
-  vars:
-    pycharm_url: https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz
-    idea_url: https://download.jetbrains.com/idea/ideaIC-2018.2.5.tar.gz
-    android_studio_url: https://dl.google.com/dl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-linux.zip
   tasks:
     - name: Add Slack repo
       yum_repository:
@@ -73,14 +69,4 @@
         name: user.email
         value: git@owny.cz
         scope: global
-    - name: Install JetBrains IDEs
-      unarchive:
-        src: "{{ item }}"
-        dest: /opt
-        remote_src: yes
-      become: yes
-      with_items:
-        - "{{ pycharm_url }}"
-        - "{{ idea_url }}"
-        - "{{ android_studio_url }}"
-      when: false # Don't install IDEs now
+
