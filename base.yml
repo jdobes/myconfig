@@ -92,7 +92,7 @@
     - name: Setup keyboard layouts
       dconf:
         key: "/org/gnome/desktop/input-sources/sources"
-        value: "[('xkb', 'cz'), ('xkb', 'us')]"
+        value: "[('xkb', 'cz'), ('xkb', 'us'), ('xkb', 'sk+qwerty')]"
         state: present
     - name: Disable auto screen lock
       dconf:
