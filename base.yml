@@ -69,7 +69,7 @@
           - gparted
           - wine
           - libselinux-python
-          - f29-backgrounds-extras-gnome
+          - f30-backgrounds-extras-gnome
           - python3-psutil
         state: present
       become: yes
