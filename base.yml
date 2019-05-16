@@ -4,10 +4,10 @@
     gnome_extensions:
       - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
         url: ""
-      - name: "nohotcorner@azuri.free.fr"
-        url: "https://extensions.gnome.org/extension-data/nohotcorner@azuri.free.fr.v18.shell-extension.zip"
       - name: "dash-to-panel@jderose9.github.com"
         url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v19.shell-extension.zip"
+      - name: "arc-menu@linxgem33.com"
+        url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v24.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
