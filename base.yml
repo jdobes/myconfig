@@ -2,20 +2,12 @@
 - hosts: all
   vars:
     gnome_extensions:
-      - name: "places-menu@gnome-shell-extensions.gcampax.github.com"
-        url: ""
       - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
-        url: ""
-      - name: "apps-menu@gnome-shell-extensions.gcampax.github.com"
         url: ""
       - name: "nohotcorner@azuri.free.fr"
         url: "https://extensions.gnome.org/extension-data/nohotcorner@azuri.free.fr.v18.shell-extension.zip"
-      - name: "Move_Clock@rmy.pobox.com"
-        url: "https://extensions.gnome.org/extension-data/Move_Clock@rmy.pobox.com.v18.shell-extension.zip"
-      - name: "dash-to-dock@micxgx.gmail.com"
-        url: "https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v66.shell-extension.zip"
-      - name: "unite@hardpixel.eu"
-        url: "https://extensions.gnome.org/extension-data/unitehardpixel.eu.v30.shell-extension.zip"
+      - name: "dash-to-panel@jderose9.github.com"
+        url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v19.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
