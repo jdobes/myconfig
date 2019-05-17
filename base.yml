@@ -8,6 +8,8 @@
         url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v19.shell-extension.zip"
       - name: "arc-menu@linxgem33.com"
         url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v24.shell-extension.zip"
+      - name: "TopIcons@phocean.net"
+        url: "https://extensions.gnome.org/extension-data/TopIcons@phocean.net.v22.shell-extension.zip"
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
