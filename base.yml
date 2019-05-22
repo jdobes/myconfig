@@ -61,6 +61,8 @@
           - f30-backgrounds-extras-gnome
           - python3-psutil
           - xorg-x11-utils
+          - neofetch
+          - youtube-dl
         state: present
       become: yes
     - name: Enable and start sshd
