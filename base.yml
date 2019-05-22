@@ -4,10 +4,13 @@
     gnome_extensions:
       - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
         url: ""
+        version: ""
       - name: "dash-to-panel@jderose9.github.com"
         url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v19.shell-extension.zip"
+        version: v19
       - name: "arc-menu@linxgem33.com"
         url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v24.shell-extension.zip"
+        version: v24
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -137,7 +140,16 @@
       unarchive:
         src: "{{ item.url }}"
         dest: "~/.local/share/gnome-shell/extensions/{{ item.name }}"
+        creates: "~/.local/share/gnome-shell/extensions/{{ item.name }}/{{ item.version }}"
         remote_src: yes
+      with_items:
+        - "{{ gnome_extensions }}"
+      when: item.url != ""
+    - name: Create extensions version file
+      file:
+        path: "~/.local/share/gnome-shell/extensions/{{ item.name }}/{{ item.version }}"
+        state: touch
+      changed_when: false
       with_items:
         - "{{ gnome_extensions }}"
       when: item.url != ""
