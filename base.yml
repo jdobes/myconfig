@@ -92,6 +92,11 @@
         key: "/org/gnome/desktop/screensaver/lock-enabled"
         value: "false"
         state: present
+    - name: Enable tap-to-click
+      dconf:
+        key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+        value: "true"
+        state: present
     - name: Set clock format
       dconf:
         key: "/org/gnome/desktop/interface/clock-format"
@@ -106,6 +111,16 @@
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
         value: "['<Shift><Alt>Tab']"
+        state: present
+    - name: Set super-tab
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications"
+        value: "['<Super>Tab']"
+        state: present
+    - name: Set super-tab backward
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
+        value: "['<Shift><Super>Tab']"
         state: present
     - name: Create local extensions directory
       file:
