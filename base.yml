@@ -144,7 +144,7 @@
     - name: Enable extensions
       dconf:
         key: "/org/gnome/shell/enabled-extensions"
-        value: "{{ a }}"
+        value: "{{ a | string }}"
         state: present
       vars:
         a: "{{ gnome_extensions | map(attribute='name') | list }}"
