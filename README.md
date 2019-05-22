@@ -1,5 +1,5 @@
 # myconfig
-Configure my Fedora 29 workstation.
+Configure my Fedora workstation.
 
 - Install ansible:
 
