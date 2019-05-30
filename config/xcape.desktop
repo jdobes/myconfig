@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=xcape
+Exec=/usr/local/bin/xcape-start.sh
+Terminal=false
+Type=Application
+StartupNotify=false

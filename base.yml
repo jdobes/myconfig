@@ -11,6 +11,8 @@
       - name: "arc-menu@linxgem33.com"
         url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v24.shell-extension.zip"
         version: v24
+    copy_scripts:
+      - bin/xcape-start.sh
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -66,6 +68,7 @@
           - xorg-x11-utils
           - neofetch
           - youtube-dl
+          - xcape
         state: present
       become: yes
     - name: Enable and start sshd
@@ -125,6 +128,11 @@
         key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
         value: "['<Shift><Super>Tab']"
         state: present
+    - name: Set overlay key to right
+      dconf:
+        key: "/org/gnome/mutter/overlay-key"
+        value: "'Super_R'"
+        state: present
     - name: Create local extensions directory
       file:
         path: ~/.local/share/gnome-shell/extensions
@@ -160,6 +168,19 @@
         state: present
       vars:
         a: "{{ gnome_extensions | map(attribute='name') | list }}"
+    - name: Copy scripts
+      copy:
+        src: "{{ item }}"
+        dest: /usr/local/bin/
+        owner: root
+        mode: 0755
+      with_items:
+        - "{{ copy_scripts }}"
+      become: yes
+    - name: Autostart xcape
+      copy:
+        src: config/xcape.desktop
+        dest: ~/.config/autostart/
     - name: Set bash line format
       lineinfile:
         path: ~/.bashrc
