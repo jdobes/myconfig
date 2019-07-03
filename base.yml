@@ -69,6 +69,7 @@
           - neofetch
           - youtube-dl
           - xcape
+          - libva-intel-driver # intel driver for HW video decoding
           - libva-utils # provides vainfo
         state: present
       become: yes
