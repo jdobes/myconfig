@@ -7,7 +7,7 @@
         description: slack repo
         baseurl: https://packagecloud.io/slacktechnologies/slack/fedora/21/$basearch
         gpgcheck: yes
-        gpgkey: https://slack.com/gpg/slack_pubkey.gpg
+        gpgkey: https://slack.com/gpg/slack_pubkey_2019.gpg
       become: yes
     - name: Add VS Code repo
       yum_repository:
