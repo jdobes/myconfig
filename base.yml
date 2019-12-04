@@ -185,6 +185,12 @@
       copy:
         src: config/xcape.desktop
         dest: ~/.config/autostart/
+    - name: Do not update dnf metadata in background
+      lineinfile:
+        path: /etc/dnf/dnf.conf
+        regexp: ^metadata_timer_sync=
+        line: metadata_timer_sync=0
+      become: yes
     - name: Set bash line format
       lineinfile:
         path: ~/.bashrc
