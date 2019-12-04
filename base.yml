@@ -111,7 +111,7 @@
     - name: Set clock format
       dconf:
         key: "/org/gnome/desktop/interface/clock-format"
-        value: "'12h'"
+        value: "'24h'"
         state: present
     - name: Set alt-tab
       dconf:
