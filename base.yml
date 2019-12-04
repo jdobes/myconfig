@@ -6,11 +6,11 @@
         url: ""
         version: ""
       - name: "dash-to-panel@jderose9.github.com"
-        url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v19.shell-extension.zip"
-        version: v19
+        url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v26.shell-extension.zip"
+        version: v26
       - name: "arc-menu@linxgem33.com"
-        url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v24.shell-extension.zip"
-        version: v24
+        url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v37.shell-extension.zip"
+        version: v37
     copy_scripts:
       - bin/xcape-start.sh
   tasks:
