@@ -62,7 +62,6 @@
           - gnome-tweaks
           - gparted
           - wine
-          - libselinux-python
           - f30-backgrounds-extras-gnome
           - python3-psutil
           - xorg-x11-utils
