@@ -47,6 +47,7 @@
       dnf:
         name:
           - PackageKit-glib
+          - NetworkManager-config-connectivity-fedora
         state: absent
       become: yes
     - name: Install packages
