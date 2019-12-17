@@ -77,6 +77,7 @@
           - unrar
           - httpie
           - mpv
+          - qbittorrent
         state: present
       become: yes
     - name: Enable and start sshd
