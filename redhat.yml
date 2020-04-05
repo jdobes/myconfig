@@ -6,8 +6,6 @@
     - name: Install openvpn packages
       dnf:
         name:
-          - NetworkManager-openvpn
-          - NetworkManager-openvpn-gnome
           - "{{ redhat_internal_cert }}"
           - "{{ redhat_internal_openvpn_profiles }}"
         state: present

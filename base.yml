@@ -58,6 +58,7 @@
           #- mpv
           #- qbittorrent
           #- cura
+           - NetworkManager-openvpn
         state: present
       become: yes
     - name: Set graphical.target as default
