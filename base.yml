@@ -1,21 +1,5 @@
 ---
 - hosts: all
-  vars:
-    gnome_extensions:
-      - name: "user-theme@gnome-shell-extensions.gcampax.github.com"
-        url: ""
-        version: ""
-      - name: "dash-to-panel@jderose9.github.com"
-        url: "https://extensions.gnome.org/extension-data/dash-to-paneljderose9.github.com.v26.shell-extension.zip"
-        version: v26
-      - name: "arc-menu@linxgem33.com"
-        url: "https://extensions.gnome.org/extension-data/arc-menulinxgem33.com.v37.shell-extension.zip"
-        version: v37
-      - name: "audio-output-switcher@anduchs"
-        url: "https://extensions.gnome.org/extension-data/audio-output-switcheranduchs.v11.shell-extension.zip"
-        version: v11
-    copy_scripts:
-      - bin/xcape-start.sh
   tasks:
     - name: Get Fedora version
       shell: rpm -E %fedora
@@ -38,50 +22,59 @@
         gpgcheck: yes
         gpgkey: https://dl.google.com/linux/linux_signing_key.pub
       become: yes
+    - name: Add jdobes/extras repo
+      shell: dnf -y copr enable jdobes/extras
+      args:
+        warn: false
+      changed_when: false
+      become: yes
     - name: Upgrade all packages
       dnf:
         name: "*"
         state: latest
       become: yes
-    - name: Remove packages
-      dnf:
-        name:
-          - PackageKit-glib
-          - NetworkManager-config-connectivity-fedora
-        state: absent
-      become: yes
     - name: Install packages
       dnf:
         name:
+          - "@base-x"
+          - "@fonts"
+          - i3-gaps
           - firefox
-          - google-chrome-stable
-          - vlc
-          - terminator
+          #- google-chrome-stable
           - vim
-          - virt-manager
-          - libvirt
-          - qemu-kvm
-          - gimp
-          - inkscape
-          - gnome-tweaks
-          - gparted
-          - wine
-          - f30-backgrounds-extras-gnome
-          - python3-psutil
-          - xorg-x11-utils
+          #- virt-manager
+          #- libvirt
+          #- qemu-kvm
+          #- gimp
+          #- inkscape
+          #- gparted
+          #- wine
           - neofetch
-          - youtube-dl
-          - xcape
-          - libva-intel-driver # intel driver for HW video decoding
-          - libva-utils # provides vainfo
-          - unrar
-          - httpie
-          - mpv
-          - qbittorrent
-          - cura
-          - krita
+          #- youtube-dl
+          #- libva-intel-driver # intel driver for HW video decoding
+          #- libva-utils # provides vainfo
+          #- unrar
+          #- httpie
+          #- mpv
+          #- qbittorrent
+          #- cura
         state: present
       become: yes
+    - name: Set graphical.target as default
+      shell: systemctl set-default graphical.target
+      changed_when: false
+      become: yes
+    - name: Autostart X on TTY1
+      lineinfile:
+        path: ~/.bash_profile
+        regexp: ^if systemctl
+        line: if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then exec startx; fi
+    - name: Start i3 as WM
+      lineinfile:
+        path: ~/.xinitrc
+        create: yes
+        regexp: ^exec
+        line: exec i3
     - name: Enable and start sshd
       systemd:
         name: sshd
@@ -99,99 +92,6 @@
         groups: libvirt
         append: yes
       become: yes
-    - name: Setup keyboard layouts
-      dconf:
-        key: "/org/gnome/desktop/input-sources/sources"
-        value: "[('xkb', 'cz'), ('xkb', 'us'), ('xkb', 'sk+qwerty')]"
-        state: present
-    - name: Disable auto screen lock
-      dconf:
-        key: "/org/gnome/desktop/screensaver/lock-enabled"
-        value: "false"
-        state: present
-    - name: Enable tap-to-click
-      dconf:
-        key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
-        value: "true"
-        state: present
-    - name: Set clock format
-      dconf:
-        key: "/org/gnome/desktop/interface/clock-format"
-        value: "'24h'"
-        state: present
-    - name: Set alt-tab
-      dconf:
-        key: "/org/gnome/desktop/wm/keybindings/switch-windows"
-        value: "['<Alt>Tab']"
-        state: present
-    - name: Set alt-tab backward
-      dconf:
-        key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
-        value: "['<Shift><Alt>Tab']"
-        state: present
-    - name: Set super-tab
-      dconf:
-        key: "/org/gnome/desktop/wm/keybindings/switch-applications"
-        value: "['<Super>Tab']"
-        state: present
-    - name: Set super-tab backward
-      dconf:
-        key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
-        value: "['<Shift><Super>Tab']"
-        state: present
-    - name: Set overlay key to right
-      dconf:
-        key: "/org/gnome/mutter/overlay-key"
-        value: "'Super_R'"
-        state: present
-    - name: Create local extensions directory
-      file:
-        path: ~/.local/share/gnome-shell/extensions
-        state: directory
-    - name: Create extensions subdirs
-      file:
-        path: "~/.local/share/gnome-shell/extensions/{{ item.name }}"
-        state: directory
-      with_items:
-        - "{{ gnome_extensions }}"
-      when: item.url != ""
-    - name: Download extensions
-      unarchive:
-        src: "{{ item.url }}"
-        dest: "~/.local/share/gnome-shell/extensions/{{ item.name }}"
-        creates: "~/.local/share/gnome-shell/extensions/{{ item.name }}/{{ item.version }}"
-        remote_src: yes
-      with_items:
-        - "{{ gnome_extensions }}"
-      when: item.url != ""
-    - name: Create extensions version file
-      file:
-        path: "~/.local/share/gnome-shell/extensions/{{ item.name }}/{{ item.version }}"
-        state: touch
-      changed_when: false
-      with_items:
-        - "{{ gnome_extensions }}"
-      when: item.url != ""
-    - name: Enable extensions
-      dconf:
-        key: "/org/gnome/shell/enabled-extensions"
-        value: "{{ a | string }}"
-        state: present
-      vars:
-        a: "{{ gnome_extensions | map(attribute='name') | list }}"
-    - name: Copy scripts
-      copy:
-        src: "{{ item }}"
-        dest: /usr/local/bin/
-        owner: root
-        mode: 0755
-      with_items:
-        - "{{ copy_scripts }}"
-      become: yes
-    - name: Autostart xcape
-      copy:
-        src: config/xcape.desktop
-        dest: ~/.config/autostart/
     - name: Do not update dnf metadata in background
       lineinfile:
         path: /etc/dnf/dnf.conf

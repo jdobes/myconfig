@@ -3,7 +3,7 @@ Configure my Fedora workstation.
 
 - Install ansible:
 
-      sudo dnf -y install ansible
+      sudo dnf -y install git ansible
 
 - Apply base config:
 
