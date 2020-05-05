@@ -1,0 +1,28 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: docker-registry
+  namespace: kube-system
+spec:
+  chart: stable/docker-registry
+  version: 1.9.2
+  targetNamespace: registry
+  set:
+    image.tag: "2.7.1"
+    persistence.enabled: "true"
+    persistence.size: "50Gi"
+    persistence.storageClass: "local-path"
+    secrets.htpasswd: "foo"
+  valuesContent: |-
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: "traefik"
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+      - registry.owny.cz
+      tls:
+      - hosts:
+        - registry.owny.cz
+        secretName: registry-owny-cz-tls
+
