@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pihole-etc
+  namespace: pihole
 spec:
   accessModes:
   - ReadWriteOnce
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pihole-dnsmasq
+  namespace: pihole
 spec:
   accessModes:
   - ReadWriteOnce
@@ -29,6 +31,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pihole
+  namespace: pihole
   labels:
     app: pihole
 spec:
@@ -44,7 +47,7 @@ spec:
     spec:
       containers:
       - name: pihole
-        image: pihole/pihole:latest
+        image: pihole/pihole:v5.0
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -70,14 +73,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pihole
+  name: pihole-dns
+  namespace: pihole
+  labels:
+    app: pihole
 spec:
   selector:
     app: pihole
   ports:
-  - port: 8000
-    targetPort: 80
-    name: pihole-admin
   - port: 53
     targetPort: 53
     protocol: TCP
@@ -88,3 +91,39 @@ spec:
     name: dns-udp
   externalIPs:
   - 192.168.0.2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-admin
+  namespace: pihole
+  labels:
+    app: pihole
+spec:
+  selector:
+    app: pihole
+  ports:
+  - port: 80
+    targetPort: 80
+    name: pihole-admin
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pihole-ingress
+  namespace: pihole
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: pihole
+spec:
+  rules:
+  - host: pihole.home.owny.cz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: pihole-admin
+          servicePort: 80
