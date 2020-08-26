@@ -1,0 +1,12 @@
+[Unit]
+Description=rclone-mount-movies
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/rclone mount --config /root/.config/rclone/rclone.conf --allow-other --allow-non-empty --read-only drive_jf_m_crypt: /var/lib/rancher/k3s/storage/pvc-0514b6ad-1924-4cc0-96d4-26fd930bcb4a
+ExecStop=/usr/bin/fusermount -uz /var/lib/rancher/k3s/storage/pvc-0514b6ad-1924-4cc0-96d4-26fd930bcb4a
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

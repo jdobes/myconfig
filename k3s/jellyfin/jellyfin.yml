@@ -1,0 +1,29 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyfin
+  namespace: kube-system
+spec:
+  chart: jellyfin
+  repo: https://billimek.com/billimek-charts/
+  version: 1.0.3
+  targetNamespace: jellyfin
+  set:
+    image.tag: "10.6.3-1-ls70"
+    timezone: "Europe/Prague"
+    persistence.config.storageClass: "local-path"
+    persistence.tvshows.storageClass: "local-path"
+    persistence.movies.storageClass: "local-path"
+  valuesContent: |-
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: "traefik"
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+      - jellyfin.owny.cz
+      tls:
+      - hosts:
+        - jellyfin.owny.cz
+        secretName: jellyfin-owny-cz-tls
+

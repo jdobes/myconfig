@@ -1,0 +1,12 @@
+[Unit]
+Description=rclone-mount-shows
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/rclone mount --config /root/.config/rclone/rclone.conf --allow-other --allow-non-empty --read-only drive_jf_s_crypt: /var/lib/rancher/k3s/storage/pvc-fe821247-f97c-4096-9c58-1db9f4a794e8
+ExecStop=/usr/bin/fusermount -uz /var/lib/rancher/k3s/storage/pvc-fe821247-f97c-4096-9c58-1db9f4a794e8
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
