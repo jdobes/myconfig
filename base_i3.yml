@@ -1,0 +1,108 @@
+---
+- hosts: all
+  tasks:
+    - name: Get Fedora version
+      shell: rpm -E %fedora
+      args:
+        warn: false
+      changed_when: false
+      register: fedora_version
+    - name: Add RPM Fusion repo
+      dnf:
+        name:
+          - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_version.stdout }}.noarch.rpm
+          - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_version.stdout }}.noarch.rpm
+        state: present
+      become: yes
+    - name: Add google-chrome repo
+      yum_repository:
+        name: google-chrome
+        description: google-chrome repo
+        baseurl: http://dl.google.com/linux/chrome/rpm/stable/x86_64
+        gpgcheck: yes
+        gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+      become: yes
+    - name: Add jdobes/extras repo
+      shell: dnf -y copr enable jdobes/extras
+      args:
+        warn: false
+      changed_when: false
+      become: yes
+    - name: Upgrade all packages
+      dnf:
+        name: "*"
+        state: latest
+      become: yes
+    - name: Install packages
+      dnf:
+        name:
+          - "@base-x"
+          - "@fonts"
+          - i3-gaps
+          - firefox
+          #- google-chrome-stable
+          - vim
+          #- virt-manager
+          #- libvirt
+          #- qemu-kvm
+          #- gimp
+          #- inkscape
+          #- gparted
+          #- wine
+          - neofetch
+          #- youtube-dl
+          #- libva-intel-driver # intel driver for HW video decoding
+          #- libva-utils # provides vainfo
+          #- unrar
+          #- httpie
+          #- mpv
+          #- qbittorrent
+          #- cura
+           - NetworkManager-openvpn
+        state: present
+      become: yes
+    - name: Set graphical.target as default
+      shell: systemctl set-default graphical.target
+      changed_when: false
+      become: yes
+    - name: Autostart X on TTY1
+      lineinfile:
+        path: ~/.bash_profile
+        regexp: ^if systemctl
+        line: if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then exec startx; fi
+    - name: Start i3 as WM
+      lineinfile:
+        path: ~/.xinitrc
+        create: yes
+        regexp: ^exec
+        line: exec i3
+    - name: Enable and start sshd
+      systemd:
+        name: sshd
+        state: started
+        enabled: yes
+      become: yes
+    - name: Ensure group libvirt exists
+      group:
+        name: libvirt
+        state: present
+      become: yes
+    - name: Add {{ lookup('env','USER') }} to libvirt group
+      user:
+        name: "{{ lookup('env','USER') }}"
+        groups: libvirt
+        append: yes
+      become: yes
+    - name: Do not update dnf metadata in background
+      lineinfile:
+        path: /etc/dnf/dnf.conf
+        regexp: ^metadata_timer_sync=
+        line: metadata_timer_sync=0
+      become: yes
+    - name: Set bash line format
+      lineinfile:
+        path: ~/.bashrc
+        regexp: ^PS1=
+        line: |
+            PS1="[\[\e[96m\]\u\[\e[0m\]: \W\$(git branch 2> /dev/null | grep \-e '\* ' | sed 's/^..\(.*\)/ \[\e[92m\](\1)\[\e[0m\]/')]\$ "
+

@@ -6,8 +6,9 @@
     - name: Install openvpn packages
       dnf:
         name:
-          - "{{ redhat_internal_cert }}"
-          - "{{ redhat_internal_openvpn_profiles }}"
+          - "krb5-workstation"
+         #- "{{ redhat_internal_cert }}" install newer version manually
+         #- "{{ redhat_internal_openvpn_profiles }}" install newer version manually
         state: present
       become: yes
     - name: Install kerberos packages
@@ -16,6 +17,7 @@
           - "{{ config_rpm_url }}"
         state: present
       become: yes
+      when: false
     - name: Get Firefox config path
       shell: find ~/.mozilla/firefox/ -type d -name '*.default'
       register: firefox_config_path
@@ -35,25 +37,24 @@
         src: config/google-chrome-kerberos.json
         dest: /etc/opt/chrome/policies/managed/redhat.json
       become: yes
-    - name: Set hexchat server list
-      copy:
-        src: config/hexchat-servlist.conf
-        dest: ~/.config/hexchat/servlist.conf
     - name: Configure printers 1/3
       lineinfile:
         path: /etc/cups/cups-browsed.conf
         regexp: ^BrowsePoll
         line: BrowsePoll {{ cups_server }}
       become: yes
+      when: false
     - name: Configure printers 2/3
       lineinfile:
         path: /etc/cups/cups-browsed.conf
         regexp: ^LocalQueueNamingRemoteCUPS
         line: LocalQueueNamingRemoteCUPS RemoteName
       become: yes
+      when: false
     - name: Configure printers 3/3
       systemd:
         name: cups-browsed
         state: restarted
         enabled: yes
       become: yes
+      when: false
