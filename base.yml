@@ -38,6 +38,12 @@
         name: "*"
         state: latest
       become: yes
+    - name: Remove packages
+      dnf:
+        name:
+          - pulseaudio-module-bluetooth
+        state: absent
+      become: yes
     - name: Install packages
       dnf:
         name:
@@ -59,6 +65,7 @@
           - cura
           - NetworkManager-openvpn
           - NetworkManager-openvpn-gnome
+          - pulseaudio-module-bluetooth-freeworld
         state: present
       become: yes
     - name: Enable and start sshd
