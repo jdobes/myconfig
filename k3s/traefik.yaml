@@ -1,0 +1,48 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  chart: https://%{KUBERNETES_API}%/static/charts/traefik-1.81.0.tgz
+  valuesContent: |-
+    rbac:
+      enabled: true
+    ssl:
+      enabled: true
+      enforced: true
+      permanentRedirect: true
+    acme:
+      enabled: true
+      logging: true
+      staging: false
+      challengeType: "dns-01"
+      delayBeforeCheck: 0
+      email: "acme@owny.cz"
+      dnsProvider:
+        name: "httpreq"
+        httpreq:
+          HTTPREQ_ENDPOINT: "http://acme-wedos.acme-wedos.svc:8000"
+          HTTPREQ_POLLING_INTERVAL: "10"
+          HTTPREQ_PROPAGATION_TIMEOUT: "3600"
+      domains:
+        enabled: true
+        domainsList:
+          - main: "*.owny.cz"
+          - sans:
+            - "owny.cz"
+      resolvers:
+        - "1.1.1.1"
+    metrics:
+      prometheus:
+        enabled: true
+    kubernetes:
+      ingressEndpoint:
+        useDefaultPublishedService: true
+    image: "rancher/library-traefik"
+    tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
