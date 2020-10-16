@@ -9,7 +9,7 @@ spec:
   version: 1.0.3
   targetNamespace: jellyfin
   set:
-    image.tag: "10.6.3-1-ls70"
+    image.tag: "10.6.4-1-ls78"
     timezone: "Europe/Prague"
     persistence.config.storageClass: "local-path"
     persistence.tvshows.storageClass: "local-path"
@@ -19,11 +19,6 @@ spec:
       enabled: true
       annotations:
         kubernetes.io/ingress.class: "traefik"
-        cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
       - jellyfin.owny.cz
-      tls:
-      - hosts:
-        - jellyfin.owny.cz
-        secretName: jellyfin-owny-cz-tls
 
