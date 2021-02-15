@@ -1,0 +1,219 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data
+  namespace: overleaf
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 512Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: overleaf
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:5
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: redis-data
+          mountPath: "/data"
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: overleaf
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+    name: redis
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-data
+  namespace: overleaf
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 512Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  namespace: overleaf
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:4.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: mongo-data
+          mountPath: "/data/db"
+      volumes:
+      - name: mongo-data
+        persistentVolumeClaim:
+          claimName: mongo-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: overleaf
+  labels:
+    app: mongo
+spec:
+  selector:
+    app: mongo
+  ports:
+  - port: 27017
+    targetPort: 27017
+    name: mongo
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sharelatex-data
+  namespace: overleaf
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 512Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sharelatex
+  namespace: overleaf
+  labels:
+    app: sharelatex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sharelatex
+  template:
+    metadata:
+      labels:
+        app: sharelatex
+    spec:
+      containers:
+      - name: sharelatex
+        image: jdobes/sharelatex:2.5.2
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SHARELATEX_APP_NAME
+          value: Overleaf Community Edition
+        - name: SHARELATEX_MONGO_URL
+          value: mongodb://mongo.overleaf.svc/sharelatex
+        - name: SHARELATEX_REDIS_HOST
+          value: redis.overleaf.svc
+        - name: REDIS_HOST
+          value: redis.overleaf.svc
+        - name: ENABLED_LINKED_FILE_TYPES
+          value: 'url,project_file'
+        - name: ENABLE_CONVERSIONS
+          value: 'true'
+        - name: EMAIL_CONFIRMATION_DISABLED
+          value: 'true'
+        - name: TEXMFVAR
+          value: /var/lib/sharelatex/tmp/texmf-var
+        volumeMounts:
+        - name: sharelatex-data
+          mountPath: "/var/lib/sharelatex"
+      volumes:
+      - name: sharelatex-data
+        persistentVolumeClaim:
+          claimName: sharelatex-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sharelatex
+  namespace: overleaf
+  labels:
+    app: sharelatex
+spec:
+  selector:
+    app: sharelatex
+  ports:
+  - port: 80
+    targetPort: 80
+    name: sharelatex
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: overleaf-ingress
+  namespace: overleaf
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: overleaf
+spec:
+  rules:
+  - host: overleaf.home
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sharelatex
+            port:
+              number: 80
